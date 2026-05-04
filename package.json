@@ -1,0 +1,13 @@
+{
+  "name": "form-validation",
+  "version": "1.0.0",
+  "description": "Form Styling and Validation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "ejs": "^3.1.9"
+  }
+}

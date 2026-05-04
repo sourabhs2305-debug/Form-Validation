@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<header>
+  <h1>📋 Registration Form</h1>
+  <p>Task 2 — Form Styling & Validation</p>
+</header>
+
+<main>
+  <section class="form-section">
+
+    <% if (success) { %>
+      <div class="alert alert-success">
+        ✅ Welcome <strong><%= newUser %></strong>! Registration successful!
+      </div>
+    <% } %>
+
+    <form action="/register" method="POST" id="regForm" novalidate>
+
+      <div class="field">
+        <label>Full Name *</label>
+        <input type="text" name="fullName" value="<%= formData.fullName || '' %>"
+          placeholder="John Doe" />
+        <% if (errors.fullName) { %>
+          <span class="error">❌ <%= errors.fullName %></span>
+        <% } %>
+      </div>
+
+      <div class="field">
+        <label>Email Address *</label>
+        <input type="email" name="email" value="<%= formData.email || '' %>"
+          placeholder="john@example.com" />
+        <% if (errors.email) { %>
+          <span class="error">❌ <%= errors.email %></span>
+        <% } %>
+      </div>
+
+      <div class="field">
+        <label>Password *</label>
+        <input type="password" name="password" placeholder="Min 6 characters" />
+        <% if (errors.password) { %>
+          <span class="error">❌ <%= errors.password %></span>
+        <% } %>
+      </div>
+
+      <div class="field">
+        <label>Confirm Password *</label>
+        <input type="password" name="confirmPassword" placeholder="Repeat password" />
+        <% if (errors.confirmPassword) { %>
+          <span class="error">❌ <%= errors.confirmPassword %></span>
+        <% } %>
+      </div>
+
+      <div class="field">
+        <label>Phone Number *</label>
+        <input type="tel" name="phone" value="<%= formData.phone || '' %>"
+          placeholder="10 digit number" />
+        <% if (errors.phone) { %>
+          <span class="error">❌ <%= errors.phone %></span>
+        <% } %>
+      </div>
+
+      <div class="field">
+        <label>Date of Birth *</label>
+        <input type="date" name="dob" value="<%= formData.dob || '' %>" />
+        <% if (errors.dob) { %>
+          <span class="error">❌ <%= errors.dob %></span>
+        <% } %>
+      </div>
+
+      <div class="field">
+        <label>Gender *</label>
+        <select name="gender">
+          <option value="">-- Select --</option>
+          <option value="male" <%= formData.gender === 'male' ? 'selected' : '' %>>Male</option>
+          <option value="female" <%= formData.gender === 'female' ? 'selected' : '' %>>Female</option>
+          <option value="other" <%= formData.gender === 'other' ? 'selected' : '' %>>Other</option>
+        </select>
+        <% if (errors.gender) { %>
+          <span class="error">❌ <%= errors.gender %></span>
+        <% } %>
+      </div>
+
+      <div class="field checkbox">
+        <label>
+          <input type="checkbox" name="agreeTerms" value="yes" />
+          I agree to Terms & Conditions *
+        </label>
+        <% if (errors.agreeTerms) { %>
+          <span class="error">❌ <%= errors.agreeTerms %></span>
+        <% } %>
+      </div>
+
+      <button type="submit" class="btn-submit">Register →</button>
+    </form>
+  </section>
+
+  <section class="users-section">
+    <h2>Registered Users <span class="badge"><%= users.length %></span></h2>
+    <% if (users.length === 0) { %>
+      <p class="empty">No users registered yet.</p>
+    <% } else { %>
+      <% users.forEach(function(u) { %>
+        <div class="user-card">
+          <div class="avatar"><%= u.fullName.charAt(0).toUpperCase() %></div>
+          <div>
+            <strong><%= u.fullName %></strong>
+            <span><%= u.email %></span>
+            <span>📞 <%= u.phone %></span>
+            <span>🎂 <%= u.dob %></span>
+            <small><%= u.createdAt %></small>
+          </div>
+        </div>
+      <% }); %>
+      <form action="/clear" method="POST">
+        <button type="submit" class="btn-clear">Clear All</button>
+      </form>
+    <% } %>
+  </section>
+</main>
+
+<script>
+document.getElementById('regForm').addEventListener('submit', function(e) {
+  let valid = true;
+  const fullName = this.fullName.value.trim();
+  const email = this.email.value.trim();
+  const password = this.password.value;
+  const confirmPassword = this.confirmPassword.value;
+  const phone = this.phone.value.trim();
+
+  if (fullName.length < 3) {
+    alert('Full name must be at least 3 characters!');
+    valid = false;
+  } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+    alert('Please enter a valid email!');
+    valid = false;
+  } else if (password.length < 6) {
+    alert('Password must be at least 6 characters!');
+    valid = false;
+  } else if (password !== confirmPassword) {
+    alert('Passwords do not match!');
+    valid = false;
+  } else if (!/^\d{10}$/.test(phone)) {
+    alert('Phone must be 10 digits!');
+    valid = false;
+  }
+
+  if (!valid) e.preventDefault();
+});
+</script>
+
+</body>
+</html>
